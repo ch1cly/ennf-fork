@@ -9,8 +9,8 @@ def iou_score(outputs, labels):
     outputs = outputs.data.squeeze().astype(np.uint8)  # BATCH x 1 x H x W => BATCH x H x W
     labels = labels.data.squeeze().astype(np.uint8)
     SMOOTH = 1e-8
-    intersection = (outputs & labels).astype(np.float).sum((1, 2))  # Will be zero if Truth=0 or Prediction=0
-    union = (outputs | labels).astype(np.float).sum((1, 2))         # Will be zzero if both are 0
+    intersection = (outputs & labels).astype(np.float64).sum((1, 2))  # Will be zero if Truth=0 or Prediction=0
+    union = (outputs | labels).astype(np.float64).sum((1, 2))         # Will be zzero if both are 0
 
     iou = (intersection + SMOOTH) / (union + SMOOTH)  # We smooth our devision to avoid 0/0
 
