@@ -102,8 +102,9 @@ class Small_UNet2(Module):
         pre_d0 = self._forward(cat0, self.dec_conv0)
 
         d1 = self.unpool1.forward(pre_d0, ind0)
-        cat1 = self.concat1.forward(pre_d0, d1)
+        cat1 = self.concat1.forward(pre_e0, d1)
         pre_d1 = self._forward(cat1, self.dec_conv1)
+        
         predictions = self.last.forward(pre_d1)
 
         return predictions
