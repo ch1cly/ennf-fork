@@ -76,16 +76,20 @@ class UNetTrainer(Module):
         :return: None
         """
         loss = 0
-        score = 0
+        score_value_sum = 0
         n = 0
         for data_batch, label_batch in self.train_dataloader:
-            _, loss_value = self._train_step(data_batch, label_batch)
+            output, loss_value = self._train_step(data_batch, label_batch)
             loss += loss_value.data.item()
             n += 1
 
-        if self.score_function:
-            pass  # some scoring stuff
+            if self.score_function:
+                score_value_sum += self.score_function(output, label_batch).mean().item()
+                # some scoring stuff
+
         self.train_loss.append(loss / n)
+        if self.score_function:
+            self.train_score.append(score_value_sum / n)
 
         if self.scheduler:
             self.scheduler.step()

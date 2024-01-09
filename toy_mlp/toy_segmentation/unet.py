@@ -60,7 +60,7 @@ class UNet(Module):
             Conv2d(64, 64, 3, 1,1),
             Relu()
         ]
-        self.last = Conv2d(64, 1, 3, 1,1)
+        self.last = Conv2d(1, 1, 1, 1, 0)
 
         self.layers = [
             self.enc_conv0, self.enc_conv1, self.bottle_neck ,self.dec_conv0, self.dec_conv1, [self.last]

@@ -9,7 +9,7 @@ import nn_lib.tensor_fns as F
 
 class SmallUNet1(Module):
     """
-    Class representing a multilayer perceptron network for solving binary classification task
+
     Number of filters K
     their spatial extent K(kernel)
     the stride S
@@ -19,9 +19,6 @@ class SmallUNet1(Module):
 
     def __init__(self,kernum:int=32):
         """
-        Creates binary MLP classifier
-        :param in_features: number of feature in the input data
-        :param hidden_layer_sizes: number of neurons in hidden layers of MLP
         """
         self._parameters = []
         self.enc_conv0 = [
@@ -47,7 +44,7 @@ class SmallUNet1(Module):
             Relu()
         ]
 
-        self.last = Conv2d(kernum, 1, 3, 1, 1)
+        self.last = Conv2d(kernum, 1, 1, 1, 0)
 
         self.layers = [
             self.enc_conv0, self.bottle_neck ,self.dec_conv0, [self.last]
