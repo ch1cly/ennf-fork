@@ -28,7 +28,8 @@ class PH2(Dataset):
         self.test:int = 150
         self.val:int = 50
 
-        self.root = r'/workspaces/ennf-fork/toy_mlp/toy_segmentation/PH2Dataset'
+        #self.root = r'/workspaces/ennf-fork/toy_mlp/toy_segmentation/PH2Dataset'
+        self.root = r'C:\Users\Timur\Documents\GitHub\ennf-fork\toy_mlp\toy_segmentation\PH2Dataset'
         print(self.root)
         for root, dirs, files in os.walk(os.path.join(self.root, 'PH2_Dataset')):
             if root.endswith('_Dermoscopic_Image'):

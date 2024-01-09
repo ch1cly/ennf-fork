@@ -6,7 +6,7 @@ from toy_mlp.toy_segmentation.model_trainer import UNetTrainer
 from toy_mlp.mnist_classifier.mnist_mlp_classifier import MnistMLPClassifier
 from toy_mlp.toy_segmentation.unet import UNet
 from toy_mlp.toy_segmentation.small_unet import SmallUNet
-from toy_mlp.toy_segmentation.small_unet_1 import SmallUNet1
+from toy_mlp.toy_segmentation.small_unet_2 import SmallUNet2
 from toy_mlp.history_plotter import plot_loss
 from toy_mlp.toy_segmentation.PH2_dataset import PH2
 
@@ -16,12 +16,12 @@ from nn_lib.scheduler.multi_step_lr import MultiStepLR
 
 def main(n_epochs, optim: Optimizer = Adam,batch_size=25, milestones=[]):
     # create binary MLP classification model
-    mlp_model = SmallUNet1()
+    mlp_model = SmallUNet2(kernel_num=32)
     print(f'Created the following binary MLP classifier:\n{mlp_model}')
     # create loss function
     loss_fn = BCELoss_logits() #CELoss()
     # create optimizer for model parameters
-    optimizer = optim(mlp_model.parameters(), lr=1e-2, weight_decay=5e-4)
+    optimizer = optim(mlp_model.parameters(), lr=1e-4, weight_decay=5e-6)
     scheduler = MultiStepLR(optimizer, milestones=milestones, gamma=0.5)
     # create a model trainer
     model_trainer = UNetTrainer(mlp_model, loss_fn, optimizer, scheduler=scheduler)
@@ -48,4 +48,4 @@ def main(n_epochs, optim: Optimizer = Adam,batch_size=25, milestones=[]):
 
 
 if __name__ == '__main__':
-    main(10,Adam,25,[0])
+    main(10,Adam,25,[])

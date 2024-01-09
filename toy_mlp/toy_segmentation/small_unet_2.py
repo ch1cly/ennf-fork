@@ -8,7 +8,7 @@ from nn_lib.mdl.layers import *
 import nn_lib.tensor_fns as F
 
 
-class Small_UNet2(Module):
+class SmallUNet2(Module):
     """
     Class representing a multilayer perceptron network for solving binary classification task
     Number of filters K
@@ -26,32 +26,34 @@ class Small_UNet2(Module):
         """
         self._parameters = []
         self.enc_conv0 = [
-            Conv2d(3, kernel_num, 3, 1, 1),
+            Conv2d(3, kernel_num, 3, 1, 1), #3 -> 64
             Relu()
         ]
-        self.pool0 = MaxPool2d(2, 2)  # 32 -> 16
+        self.pool0 = MaxPool2d(2, 2)  #r16 -> 4
         self.enc_conv1 = [
-            Conv2d(kernel_num, kernel_num * 2, 3, 1, 1),
+            Conv2d(kernel_num, kernel_num * 2, 3, 1, 1), # 64 -> 128
             Relu(),
         ]
-        self.pool1 = MaxPool2d(2, 2)  # 16 -> 8
+        self.pool1 = MaxPool2d(2, 2)  #r8 -> 4
         self.bottle_neck = [
-            Conv2d(kernel_num * 2, kernel_num * 4, 3, 1, 1),
+            Conv2d(kernel_num * 2, kernel_num * 4, 3, 1, 1), # 128 -> 256
+            Relu(),
+            Conv2d(kernel_num * 4, kernel_num * 2, 3, 1, 1), #256 ->128
             Relu()
         ]
         self.unpool0 = MaxUnpool2d(2, 2)  # 8 -> 16
         self.concat0 = Concat2d()
         self.dec_conv0 = [
-            Conv2d(kernel_num * 4 * 2, kernel_num * 2, 3, 1, 1),
+            Conv2d(kernel_num * 2 * 2, kernel_num, 3, 1, 1), # 256 -> 64
             Relu(),
         ]
-        self.unpool1 = MaxUnpool2d(2, 2)  # 16 -> 32
+        self.unpool1 = MaxUnpool2d(2, 2)  # r16 -> 32  64
         self.concat1 = Concat2d()
         self.dec_conv1 = [
-            Conv2d(kernel_num * 2 * 2, kernel_num, 3, 1, 1),
+            Conv2d(kernel_num * 2, kernel_num, 3, 1, 1), # 128 -> 64
             Relu(),
         ]
-        self.last = Conv2d(kernel_num, 1, 1, 1, 0)
+        self.last = Conv2d(kernel_num, 1, 1, 1, 0) # 64 -> 1
 
         self.layers = [
             self.enc_conv0, self.enc_conv1, self.bottle_neck, self.dec_conv0, self.dec_conv1, [self.last]
@@ -104,7 +106,7 @@ class Small_UNet2(Module):
         d1 = self.unpool1.forward(pre_d0, ind0)
         cat1 = self.concat1.forward(pre_e0, d1)
         pre_d1 = self._forward(cat1, self.dec_conv1)
-        
+
         predictions = self.last.forward(pre_d1)
 
         return predictions
